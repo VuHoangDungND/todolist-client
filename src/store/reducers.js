@@ -10,7 +10,7 @@ const initstate = {
     ...localState,
 };
 
-let fetchApi, todoList;
+let fetchApi, todoList, tmpList;
 
 const reducers = (state = initstate, action) => {
     switch (action.type) {
@@ -59,10 +59,16 @@ const reducers = (state = initstate, action) => {
                 return todo.id !== action.payload.id;
             });
 
+            tmpList = state.temporarilyList;
+            tmpList = tmpList.filter((todo) => {
+                return todo.id !== action.payload.id;
+            });
+
             localStorage.setItem('todolist', JSON.stringify(todoList));
             return {
                 ...state,
                 currentList: todoList,
+                temporarilyList: tmpList,
                 isIgnore: false,
             };
 
