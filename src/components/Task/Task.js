@@ -2,6 +2,7 @@ import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import * as contactService from '../../services/contactService';
 import * as showService from '../../services/showService';
 import { actions } from '../../store';
 import Button from '../Button';
@@ -33,11 +34,16 @@ function Task({ isUpdate = false, data = {} }) {
     }, [dispatch]);
 
     //handleSubmit
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
         if (isUpdate) {
             dispatch(actions.updateList(info));
         } else {
-            dispatch(actions.addList(info));
+            const fetchApi = async () => {
+                const res = await contactService.add(info);
+                dispatch(actions.addList(res.data.data));
+            };
+            fetchApi();
         }
     };
 
@@ -55,6 +61,7 @@ function Task({ isUpdate = false, data = {} }) {
 
     //handleRemove
     const handleRemove = () => {
+        console.log(info);
         dispatch(actions.deleteList(info));
     };
 

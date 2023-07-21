@@ -15,22 +15,16 @@ let fetchApi, todoList, tmpList;
 const reducers = (state = initstate, action) => {
     switch (action.type) {
         case 'GET_LIST':
+            localStorage.setItem('todolist', JSON.stringify(action.payload));
             return {
                 ...state,
                 currentList: action.payload,
             };
 
         case 'ADD_LIST':
-            fetchApi = async () => {
-                await contactService.add(action.payload);
-            };
-
-            fetchApi();
-
-            localStorage.setItem('todolist', JSON.stringify(state.currentList));
             return {
                 ...state,
-                currentList: todoList,
+                currentList: action.payload,
             };
 
         case 'UPDATE_LIST':
