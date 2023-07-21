@@ -1,13 +1,15 @@
 import classNames from 'classnames/bind';
 import { useEffect, useRef, useState } from 'react';
 
+import { actions } from '../../store';
 import Task from '../../components/Task';
 import * as searchServices from '../../services/searchService';
 import { useDebounce } from '../../hooks';
 import styles from './ManageTask.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Button from '../../components/Button';
 
 const cx = classNames.bind(styles);
 
@@ -18,6 +20,7 @@ function ManageTask() {
     const [todoList, setTodoList] = useState(state.currentList);
     const [loading, setLoading] = useState(false);
     const inputRef = useRef();
+    const dispatch = useDispatch();
 
     const debouncedValue = useDebounce(searchValue, 500);
 
@@ -62,6 +65,11 @@ function ManageTask() {
         }
     };
 
+    //handle remove
+    const handleRemove = () => {
+        dispatch(actions.deleteAllList());
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('label')}> To Do List </div>
@@ -86,7 +94,24 @@ function ManageTask() {
                 ? todoList.map((data, index) => <Task isUpdate data={data} key={index} />)
                 : searchResult.map((data, index) => <Task isUpdate data={data} key={index} />)}
 
-            {state.isChange ? <div>Here</div> : null}
+            {state.temporarilyList.length !== 0 && !state.isIgnore ? (
+                <div className={cx('bulk-action')}>
+                    <div className={cx('bulk-name')}>Bulk Action: </div>
+                    <div className={cx('bulk-list-btn')}>
+                        <Button
+                            className={cx('btn-done')}
+                            onClick={() => dispatch(actions.ignoreTempList())}
+                        >
+                            {' '}
+                            Done
+                        </Button>
+                        <Button className={cx('btn-remove')} onClick={handleRemove}>
+                            {' '}
+                            Remove
+                        </Button>
+                    </div>
+                </div>
+            ) : null}
         </div>
     );
 }

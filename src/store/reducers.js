@@ -5,7 +5,8 @@ let localState = JSON.parse(localStorage.getItem('todolist'));
 
 const initstate = {
     currentList: [],
-    isChange: false,
+    temporarilyList: [],
+    isIgnore: false,
     ...localState,
 };
 
@@ -20,13 +21,16 @@ const reducers = (state = initstate, action) => {
             };
 
         case 'ADD_LIST':
-            fetchApi = async () => await contactService.add(action.payload);
+            fetchApi = async () => {
+                await contactService.add(action.payload);
+            };
 
             fetchApi();
+
             localStorage.setItem('todolist', JSON.stringify(state.currentList));
             return {
                 ...state,
-                currentList: [...state.currentList, ...action.payload],
+                currentList: todoList,
             };
 
         case 'UPDATE_LIST':
@@ -40,10 +44,9 @@ const reducers = (state = initstate, action) => {
                 else return todo;
             });
 
-            localStorage.setItem('todolist', JSON.stringify(todoList));
             return {
                 ...state,
-                currentList: todoList,
+                currentList: [...state.currentList, action.payload],
             };
 
         case 'DELETE_LIST':
@@ -62,13 +65,52 @@ const reducers = (state = initstate, action) => {
                 currentList: todoList,
             };
 
-        case 'CHANGE':
-            console.log(action.payload);
+        case 'DELETE_ALL_LIST':
+            fetchApi = async () => {
+                todoList = state.currentList;
+                state.temporarilyList.map(async (todo) => {
+                    await contactService.del(todo);
+                });
+
+                state.temporarilyList.map((todo) => {
+                    todoList = todoList.filter((store) => {
+                        return store.id !== todo.id;
+                    });
+                    return todo;
+                });
+            };
+            fetchApi();
+
+            localStorage.setItem('todolist', JSON.stringify(todoList));
             return {
                 ...state,
-                isChange: action.payload,
+                currentList: todoList,
+                temporarilyList: [],
+                isIgnore: false,
             };
 
+        case 'ADD_TEMP_LIST':
+            return {
+                ...state,
+                temporarilyList: [...state.temporarilyList, action.payload],
+                isIgnore: false,
+            };
+
+        case 'REMOVE_TEMP_LIST':
+            todoList = state.temporarilyList;
+            todoList = todoList.filter((todo) => {
+                return todo.id !== action.payload.id;
+            });
+            return {
+                ...state,
+                temporarilyList: todoList,
+            };
+
+        case 'IGNORE_TEMP_LIST':
+            return {
+                ...state,
+                isIgnore: true,
+            };
         default:
             return state;
     }

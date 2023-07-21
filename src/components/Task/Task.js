@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import * as showService from '../../services/showService';
@@ -10,22 +10,13 @@ import styles from './Task.module.scss';
 const cx = classNames.bind(styles);
 
 function Task({ isUpdate = false, data = {} }) {
-    const oldInfo = useRef({
-        name: '',
-        description: '',
-        piority: 'Normal',
-        ...data,
-        date: data.date ? data.date.slice(0, 10) : '',
-        tick: data.tick === 1 ? true : false,
-    });
-
     const [info, setInfo] = useState({
         name: '',
         description: '',
         piority: 'Normal',
         ...data,
-        date: data.date ? data.date.slice(0, 10) : '',
-        tick: data.tick === 1 ? true : false,
+        date: data.date ? data.date : '',
+        tick: false,
     });
     const [isDetail, setIsDetail] = useState(false);
 
@@ -57,6 +48,8 @@ function Task({ isUpdate = false, data = {} }) {
 
     //handleChangeTick
     const handleChangeTick = (e) => {
+        if (info.tick === false) dispatch(actions.addTempList(info));
+        else dispatch(actions.removeTempList(info));
         setInfo({ ...info, tick: !info.tick });
     };
 

@@ -26,9 +26,30 @@ export const deleteList = (state) => {
     };
 };
 
-export const isChange = (state) => {
+export const deleteAllList = (state) => {
     return {
-        type: 'CHANGE',
+        type: 'DELETE_ALL_LIST',
+        payload: state,
+    };
+};
+
+export const addTempList = (state) => {
+    return {
+        type: 'ADD_TEMP_LIST',
+        payload: state,
+    };
+};
+
+export const removeTempList = (state) => {
+    return {
+        type: 'REMOVE_TEMP_LIST',
+        payload: state,
+    };
+};
+
+export const ignoreTempList = (state) => {
+    return {
+        type: 'IGNORE_TEMP_LIST',
         payload: state,
     };
 };

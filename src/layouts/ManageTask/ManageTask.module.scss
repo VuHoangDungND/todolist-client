@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
+    padding-bottom: 40px;
     font-weight: 600;
     overflow: scroll;
 }
@@ -35,6 +36,38 @@
 
 .loading {
     animation: spinner 0.8s linear infinite;
+}
+
+.bulk-action {
+    position: absolute;
+    bottom: 12px;
+    width: 50%;
+    height: 40px;
+    background-color: antiquewhite;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 48px 0 48px;
+    margin-right: -20px;
+    transform: translateX(-21px);
+}
+
+.bulk-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bulk-list-btn {
+    display: flex;
+    padding-right: 8px;
+}
+
+.btn-done {
+    background-color: blue;
+}
+
+.btn-remove {
+    background-color: #d9534f;
 }
 
 @keyframes spinner {
