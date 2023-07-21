@@ -63,6 +63,7 @@ const reducers = (state = initstate, action) => {
             return {
                 ...state,
                 currentList: todoList,
+                isIgnore: false,
             };
 
         case 'DELETE_ALL_LIST':
